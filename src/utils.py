@@ -6,6 +6,10 @@ Funciones auxiliares para análisis de MHCII y manejo de FASTA/Alelos.
 from pathlib import Path
 import pandas as pd
 import numpy as np
+from pathlib import Path
+import re
+import pandas as pd
+from io import StringIO
 
 def crear_matriz(fasta_path: str, alleles_path: str) -> 'pd.DataFrame':
     """
@@ -60,3 +64,47 @@ def crear_matriz(fasta_path: str, alleles_path: str) -> 'pd.DataFrame':
 
 
 
+
+def netMHC2df(filepath: str | Path) -> pd.DataFrame:
+    """
+    Convierte la salida cruda de NetMHCIIpan en un DataFrame de pandas.
+
+    - Quita comentarios (#) y separadores de guiones.
+    - Une valores como "<= WB" en una sola celda ("<=WB") para que no rompan el parseo.
+    - Devuelve un DataFrame con las columnas originales.
+
+    Parameters
+    ----------
+    filepath : str or Path
+        Ruta al archivo de salida .xls (en realidad texto con separadores por espacio).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame con todas las filas, incluyendo las que contienen '<= WB'
+        en la columna BindLevel.
+    """
+    filepath = Path(filepath)
+    cleaned_lines = []
+
+    with filepath.open() as f:
+        for line in f:
+            # Saltar líneas vacías, comentarios o separadores de guiones
+            if not line.strip() or line.startswith("#") or line.startswith("-"):
+                continue
+            # Unir "<= WB" -> "<=WB" para que pandas lo trate como un solo campo
+            line = re.sub(r"<=\s+([A-Za-z0-9]+)", r"<=\1", line)
+            cleaned_lines.append(line)
+
+    # Crear DataFrame
+    df = pd.read_csv(
+        StringIO("".join(cleaned_lines)),
+        sep=r"\s+",
+        engine="python"
+    )
+
+    # Si prefieres volver a mostrar "<= WB" en lugar de "<=WB":
+    if "BindLevel" in df.columns:
+        df["BindLevel"] = df["BindLevel"].str.replace("<=WB", "<= WB", regex=False)
+
+    return df
