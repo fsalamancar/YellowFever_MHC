@@ -108,3 +108,51 @@ def netMHC2df(filepath: str | Path) -> pd.DataFrame:
         df["BindLevel"] = df["BindLevel"].str.replace("<=WB", "<= WB", regex=False)
 
     return df
+
+
+def marcar_peptidos(matriz: pd.DataFrame,
+                          master_filt: pd.DataFrame) -> pd.DataFrame:
+    """
+    Devuelve una copia de `matriz` en la que cada péptido indicado en
+    `master_filt` es reemplazado por un emoji según su BindLevel:
+        <= WB  -> 🟢
+        <= SB  -> 🔵
+    """
+    result = matriz.copy()
+    full_sequence = "".join(map(str, result.columns)).upper()
+
+    for _, row in master_filt.iterrows():
+        mhc = row["MHC"]
+        pep = str(row["Core"]).upper().strip()
+        cond = row["BindLevel"]
+
+        if pd.isna(mhc) or pd.isna(pep) or pd.isna(cond):
+            continue
+
+        # normaliza BindLevel quitando espacios y pasando a mayúsculas
+        cond_norm = re.sub(r"\s+", "", str(cond)).upper()
+
+        # asigna emoji
+        if "WB" in cond_norm:
+            emoji = "🟢"
+        elif "SB" in cond_norm:
+            emoji = "🔵"
+        else:
+            continue
+
+        # verifica que el MHC exista en la matriz
+        if mhc not in result.index:
+            continue
+
+        # busca todas las apariciones del péptido en la secuencia
+        start = 0
+        while True:
+            pos = full_sequence.find(pep, start)
+            if pos == -1:
+                break
+            start_idx = pos
+            end_idx = pos + len(pep)
+            result.iloc[result.index.get_loc(mhc), start_idx:end_idx] = emoji
+            start = pos + 1
+
+    return result
