@@ -86,22 +86,29 @@ Se generará un archivo Excel con un mapa de calor que indica la afinidad de uni
 
 ## Estructura del proyecto
 
+```bash
 YellowFever_MHC/
-
 │
-├── data/                 # Archivos de entrada (FASTA y alelos)
-
-├── results/              # Resultados generados por netMHCIIpan
-
+├── data/
+│ ├── alelos/ # Archivos de texto con la lista de alelos (uno por línea)
+│ └── fasta/ # Secuencias FASTA de las proteínas de Fiebre Amarilla
+│
+├── notebooks/
+│ └── main.ipynb # Notebook de análisis/ejemplos
+│
+├── outputs/ # Resultados generados (master y CSV finales)
+│
+├── scripts/
+│ ├── auto_netMHCIIpan.bash # Script para ejecutar netMHCIIpan en todos los alelos
+│ └── run_all_masters.sh # Script de automatización de resultados master
+│
 ├── src/
-
-│   ├── mhcMaker.py       # Script principal de análisis
-
-│   └── utils.py          # Funciones auxiliares
-
-├── auto_netMHCIIpan      # Script de ejecución de netMHCIIpan
-
-└── README.md             # Este archivo
+│ └── utils.py # Funciones auxiliares (crear_matriz, netMHC2df, marcar_peptidos)
+│
+├── requirements.txt # Dependencias de Python
+├── mhcMarker.py # Programa principal que genera la matriz marcada
+└── README.md # Este documento
+```
 
 ---
 ## 👤 Author
