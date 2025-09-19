@@ -72,8 +72,11 @@ El programa pedirá las rutas de:
 Ejemplo de ingreso en la terminal:
 
 fasta_path = "/ruta/a/proteinas.fasta"
+
 alelos_path = "/ruta/a/alelos.txt"
+
 netmhc_path = "/ruta/a/master_resultados.txt"
+
 salida_csv = "/ruta/de/salida/resultado_final.csv"
 
 
@@ -86,13 +89,20 @@ Se generará un archivo Excel con un mapa de calor que indica la afinidad de uni
 ## Estructura del proyecto
 
 YellowFever_MHC/
+
 │
 ├── data/                 # Archivos de entrada (FASTA y alelos)
+
 ├── results/              # Resultados generados por netMHCIIpan
+
 ├── src/
+
 │   ├── mhcMaker.py       # Script principal de análisis
+
 │   └── utils.py          # Funciones auxiliares
+
 ├── auto_netMHCIIpan      # Script de ejecución de netMHCIIpan
+
 └── README.md             # Este archivo
 
 ---
