@@ -71,14 +71,12 @@ El programa pedirá las rutas de:
 
 Ejemplo de ingreso en la terminal:
 
+```python
 fasta_path = "/ruta/a/proteinas.fasta"
-
 alelos_path = "/ruta/a/alelos.txt"
-
 netmhc_path = "/ruta/a/master_resultados.txt"
-
 salida_csv = "/ruta/de/salida/resultado_final.csv"
-
+```
 
 4. **Resultados:**
 
