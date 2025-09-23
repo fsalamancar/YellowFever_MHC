@@ -15,13 +15,13 @@ run_netmhcii() {
   while IFS= read -r A; do
     if [ "$first" -eq 1 ]; then
       # primera iteración: quitar primeras 14 y las últimas 3
-      netMHCIIpan -f "$fasta" -a "$A" -length 20 -xls \
+      netMHCIIpan -f "$fasta" -a "$A" -length 15 -xls \
         | awk 'NR>14 {buf[NR]=$0} END {for (i=15; i<=NR-3; i++) print buf[i]}' \
         > "${outfile}.xls"
       first=0
     else
       # siguientes: quitar primeras 16 y las últimas 3
-      netMHCIIpan -f "$fasta" -a "$A" -length 20 -xls \
+      netMHCIIpan -f "$fasta" -a "$A" -length 15 -xls \
         | awk 'NR>16 {buf[NR]=$0} END {for (i=17; i<=NR-3; i++) print buf[i]}' \
         >> "${outfile}.xls"
     fi
